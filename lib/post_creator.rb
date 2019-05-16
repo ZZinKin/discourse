@@ -39,6 +39,7 @@ class PostCreator
   #                             dequeue before the commit finishes. If you do this, be sure to
   #                             call `enqueue_jobs` after the transaction is comitted.
   #   hidden_reason_id        - Reason for hiding the post (optional)
+  #   skip_unique_check       - Do not check if post is unique.
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -491,6 +492,7 @@ class PostCreator
   def save_post
     @post.disable_rate_limits! if skip_validations?
     @post.skip_validation = skip_validations?
+    @post.skip_unique_check = @opts[:skip_unique_check]
     saved = @post.save
     rollback_from_errors!(@post) unless saved
   end
